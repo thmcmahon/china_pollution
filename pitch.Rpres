@@ -1,0 +1,50 @@
+Chinese Pollution
+========================================================
+left: 70%
+![Smog China](http://breakingenergy.com/wp-content/uploads/sites/2/2014/04/159915008.jpg)
+***
+Author: Tom McMahon
+
+Date: December 2015
+
+Introduction
+========================================================
+
+- Air pollution in China is very high compared with most Western countries.
+- The extent of this air pollution is difficult to track, as official government statistics are often unreliable.
+- This app allows users to interactively examine air pollution levels in five Chinese cities.
+
+Pollution varies significantly by city
+========================================================
+
+- Some Chinese cities are much more polluted than others as these summary statistics show.
+
+```{r, echo = FALSE}
+library(dplyr)
+pollution <- readRDS('data/china_pm25.Rds') %>%
+  filter(qc_name == "Valid", pm25 >= -5) %>%
+    group_by(city) %>%
+    summarise(`Average PM2.5` = mean(pm25),
+              `Typical PM2.5` = median(pm25))
+kable(pollution)
+```
+
+Boxplot of city pollution levels
+========================================================
+
+- While the summary statistics are helpful, plots are also useful to see differences.
+
+```{r, echo=FALSE}
+pollution <- readRDS('data/china_pm25.Rds') %>%
+  filter(qc_name == "Valid", pm25 >= -5)
+boxplot(pollution$pm25 ~ pollution$city, outline = FALSE)
+```
+
+A true picture
+========================================================
+
+- The shiny app allows you to examine variance by each city over time.
+- This allows you to see patterns, for example:
+* Pollution appears to be reducing over time
+* There are distinct seasonal patterns in cities such as Guangzhou
+- Check out the app at https://thmcmahon.shinyapps.io/china_pollution
